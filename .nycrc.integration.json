@@ -1,6 +1,6 @@
 {
-  "all": true,
-  "check-coverage": true,
+  "all": false,
+  "check-coverage": false,
   "reporter": [
     "html",
     "json",
@@ -10,9 +10,10 @@
   ],
   "reports-dir": "coverage-integration",
   "include": [
-    "src/**/*.js"
+    
   ],
   "exclude": [
+    "src/**/*.js",
     "**/*.spec.js"
   ],
   "branches": 80,
