@@ -1,32 +1,77 @@
-# template-nodejs
-A template project for nodejs. Has integrated linting, testing,
+# Wasabi Object Storage Module
+A javascript based module to access and perform operations on Linode object storage via code. It has integrated linting, testing,
 coverage, reporting, GitHub actions for publishing to npm repository, dependency updates and other goodies.
 
-Easily use this template to quick start a production ready nodejs project template.
-
 ## Code Guardian
-[![<app> build verification](https://github.com/aicore/template-nodejs/actions/workflows/build_verify.yml/badge.svg)](https://github.com/aicore/template-nodejs/actions/workflows/build_verify.yml)
+[![<app> build verification](https://github.com/aicore/wasabi-storage-lib/actions/workflows/build_verify.yml/badge.svg)](https://github.com/aicore/wasabi-storage-lib/actions/workflows/build_verify.yml)
 
-<a href="https://sonarcloud.io/summary/new_code?id=aicore_template-nodejs-ts">
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=alert_status" alt="Sonar code quality check" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=security_rating" alt="Security rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=vulnerabilities" alt="vulnerabilities" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=coverage" alt="Code Coverage" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=bugs" alt="Code Bugs" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=reliability_rating" alt="Reliability Rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=sqale_rating" alt="Maintainability Rating" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=ncloc" alt="Lines of Code" />
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_template-nodejs-ts&metric=sqale_index" alt="Technical debt" />
+<a href="https://sonarcloud.io/summary/new_code?id=wasabi-storage-lib">
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=alert_status" alt="Sonar code quality check" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=security_rating" alt="Security rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=vulnerabilities" alt="vulnerabilities" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=coverage" alt="Code Coverage" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=bugs" alt="Code Bugs" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=reliability_rating" alt="Reliability Rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=sqale_rating" alt="Maintainability Rating" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=ncloc" alt="Lines of Code" />
+  <img src="https://sonarcloud.io/api/project_badges/measure?project=aicore_wasabi-storage-lib&metric=sqale_index" alt="Technical debt" />
 </a>
 
 
-# TODOs after template use
-1. Update package.json with your app defaults
-2. Check Build actions on pull requests.
-3. In sonar cloud, enable Automatic analysis from `Administration
-   Analysis Method` for the first time before a pull request is raised: ![image](https://user-images.githubusercontent.com/5336369/148695840-65585d04-5e59-450b-8794-54ca3c62b9fe.png)
-4. Check codacy runs on pull requests, set codacy defaults. You may remove codacy if sonar cloud is only needed.
-5. Update the above Code Guardian badges; change all `id=aicore_template-nodejs-ts` to the sonar id of your project fields.
+## Installing
+* > npm i @aicore/wasabi-storage-lib
+
+## Usage
+### Prerequisite
+1. To upload a file to a bucket in Wasabi Object Storage users need to configure accessKey, secretKey and create a bucket.
+ Please refer to the official Wasabi guide to generate an accessKey and create a bucket.
+
+   AccessKey Guide:  https://wasabi-support.zendesk.com/hc/en-us/articles/360019677192-Creating-a-Wasabi-API-Access-Key-Set
+
+## Code usage
+
+### Uploading File to Wasabi Bucket
+
+Request Parameters :
+
+* **accessKeyId (type: String):** bucket specific unique identifier required for authentication
+* **secretAccessKey (type: String):** user specific unique identifier required for authentication
+* **region (type: String):** indicates the geographical server location (e.g us-east-1, eu-west-1a)
+* **file (type: String):** complete path of the file to be uploaded is passed on as a parameter
+* **bucket (type: String):** uniquely identifies the bucket where the file should be uploaded
+
+Please refer to https://docs.aws.amazon.com/sdk-for-javascript/index.html for more details.
+
+```js
+// import the module directly to your file
+import wasabi from '@aicore/wasabi_storage_module.js';
+
+//Example for uploading file to linode object storage
+const response = await wasabi.uploadFileToBucket(accessKey, secretKey, region, fileName, bucketName);
+```
+
+### **2. getObject**
+
+Request Parameters :
+
+* **accessToken (type: String):** Linode API Key.
+* **clusterId (type: String):**  indicates the geographical server location (e.g 'us-east-1', 'eu-west-1a')
+* **bucketName (type: String):** Exact Name of the bucket the file resides in
+* **objectName (type: String):** Exact Name(not the path) of the the file in String
+
+
+```js
+//Example for retrieving the File object URL
+const fileURL = await linodeModule.fetchObjectUrl(accessToken, 
+    clusterId, bucketName, objectName);
+```
+
+```
+Request Body:
+
+Object Fetch Response : {"AcceptRanges":"bytes","LastModified":"2022-02-14T12:58 :57.000Z","ContentLength":237,"ETag":"\"3df9179a0f577cb4dff46ff04201f19e\"","Con tentType":"text/plain","Metadata":{},"Body":{"type":"Buffer","data":[78,101,119, 32,102,105,101,108,100,115,32,116,111,32,98,101,32,97,100,100,101,100,13,10,49,4 6,100,111,119,110,108,111,97,100,85,114,108,32,61,32,115,116,114,105,110,103,13, 10,50,46,73,109,97,103,101,115,32,61,32,91,97,114,114,97,121,32,111,102,32,83,11 6,114,105,110,103,93,13,10,51,46,97,115,115,101,116,84,121,112,101,32,61,32,107, 101,121,119,111,114,100,32,40,84,104,101,109,101,47,69,120,116,101,110,115,105,1 11,110,41,32,13,10,13,10,49,46,32,84,104,101,109,101,115,32,99,108,97,115,115,10 5,102,105,99,97,116,105,111,110,44,32,104,111,119,63,13,10,50,46,32,69,120,116,1 01,110,115,105,111,110,32,99,108,97,115,115,105,102,105,99,97,116,105,111,110,44 ,32,104,111,119,63,13,10,51,46,32,78,80,77,32,112,117,98,108,105,115,104,44,32,1 04,111,119,63,13,10,52,46,32,69,120,116,101,110,115,105,111,110,32,105,99,111,11 0,115,44,32,119,104,101,114,101,63]}}
+
+```
 
 # Commands available
 

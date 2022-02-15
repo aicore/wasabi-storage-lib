@@ -65,11 +65,16 @@ async function uploadFileToBucket (accessKeyId, secretAccessKey, region, file, b
 }
 
 /**
+ * Module to get the object data. The path of the file to be retrieved is
+ * passed on as a parameter and the obejct stream is fetched using AWS S3 client.
  * 
- * @param region 
- * @param bucketName 
- * @param objectName 
- * @returns getObjectResponse
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param objectName object to be retrieved is passed on as a parameter
+ * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
+ * @returns getObjectResponse 
  */
 async function getObject(accessKeyId, secretAccessKey, region, bucketName, objectName, url) {
     try {
@@ -82,7 +87,7 @@ async function getObject(accessKeyId, secretAccessKey, region, bucketName, objec
         
         let params = {
             Bucket: bucketName,
-            Key: objectName,
+            Key: objectName
         };
         
        return await s3Client.getObject(params).promise();

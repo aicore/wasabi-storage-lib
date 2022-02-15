@@ -42,6 +42,17 @@ const BASE_LINODE_URL_SUFFIX = '.wasabisys.com';
     return response;
 }
 
+/**
+ * Module to get the object data. The path of the file to be retrieved is
+ * passed on as a parameter and the obejct stream is fetched using AWS S3 client.
+ * 
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param objectName object to be retrieved is passed on as a parameter
+ * @returns getObjectResponse 
+ */
 async function fetchObject(accessKeyId, secretAccessKey, region, bucketName, objectName) {
     if (!region || !bucketName || !objectName) {
         throw new Error("Invalid parameter value: accessToken, region, fileName " +
@@ -54,8 +65,8 @@ async function fetchObject(accessKeyId, secretAccessKey, region, bucketName, obj
         throw new Error("Invalid Response: Body or Body.Data is missing");
     }    
 
-    console.log("Object Fetch Response : " + JSON.stringify(body));
-    return body.Body.data;
+    console.log("Object Fetch Response : " + JSON.stringify(response));
+    return response.Body.data;
 }
 
 export default {
