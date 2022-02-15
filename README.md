@@ -62,8 +62,8 @@ Request Parameters :
 
 ```js
 //Example for retrieving the File object URL
-const fileURL = await linodeModule.fetchObjectUrl(accessToken, 
-    clusterId, bucketName, objectName);
+const fileUrl = await wasabi.fetchObject(accessKey, 
+  secretKey, region, bucketName, fileName);
 ```
 
 ```
