@@ -39,6 +39,7 @@ Request Parameters :
 * **region (type: String):** indicates the geographical server location (e.g us-east-1, eu-west-1a)
 * **file (type: String):** complete path of the file to be uploaded is passed on as a parameter
 * **bucket (type: String):** uniquely identifies the bucket where the file should be uploaded
+* **objectNameOverride (type: String):** Optional parameter, if given, the file name in wasabi will be overridden.
 
 Please refer to https://docs.aws.amazon.com/sdk-for-javascript/index.html for more details.
 
@@ -48,6 +49,9 @@ import wasabi from '@aicore/wasabi_storage_module.js';
 
 //Example for uploading file to linode object storage
 const response = await wasabi.uploadFileToBucket(accessKey, secretKey, region, fileName, bucketName);
+
+//Example if you want to change the file name in wasabi/ provide suctom upload location
+const response = await wasabi.uploadFileToBucket(accessKey, secretKey, region, fileName, bucketName, customPathInWasabi);
 ```
 
 ### **2. getObject**
