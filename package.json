@@ -1,6 +1,6 @@
 {
   "name": "@aicore/wasabi-storage-lib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Template for nodejs with unit gulp build, test, coverage, code guardian, github and Other defaults",
   "main": "src/wasabi_storage_module.js",
   "type": "module",
