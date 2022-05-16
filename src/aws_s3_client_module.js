@@ -17,7 +17,6 @@
  *
  */
 import pkg from 'aws-sdk';
-import joinURL from 'url-join';
 import path from 'path';
 import fsExtra from "fs-extra";
 import stream from "stream";
@@ -31,13 +30,15 @@ const {S3, Endpoint} = pkg;
  * @param accessKeyId bucket specific unique identifier required for authentication
  * @param secretAccessKey user specific unique identifier required for authentication
  * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
- * @param file complete path of the file to be uploaded is passed on as a parameter
+ * @param filePath complete path of the file to be uploaded is passed on as a parameter
  * @param bucket uniquely identifies the bucket where the file should be uploaded
  * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
+ * @param objectNameOverride If provided, the file will be uploaded with the given object name. Use this to provide
+ * custom file names and paths in s3.
  * @returns {Promise<void>} void
  */
 
-async function uploadFileToBucket (accessKeyId, secretAccessKey, region, file, bucket, url) {
+async function uploadFileToBucket (accessKeyId, secretAccessKey, region, filePath, bucket, url, objectNameOverride) {
     const uploadStream = ({ Bucket, Key }) => {
         const s3Client = new S3({
             accessKeyId: accessKeyId,
@@ -50,8 +51,8 @@ async function uploadFileToBucket (accessKeyId, secretAccessKey, region, file, b
             promise: s3Client.upload({ Bucket, Key, Body: pass }).promise()
         };
     };
-    const filePath = path.basename(file);
-    const { writeStream, promise } = uploadStream({Bucket: bucket, Key: filePath});
+    const objectName = objectNameOverride ? objectNameOverride : path.basename(filePath);
+    const { writeStream, promise } = uploadStream({Bucket: bucket, Key: objectName});
     fsExtra.createReadStream(filePath).pipe(writeStream);
     const response = {
         status: true,
@@ -67,14 +68,14 @@ async function uploadFileToBucket (accessKeyId, secretAccessKey, region, file, b
 /**
  * Module to get the object data. The path of the file to be retrieved is
  * passed on as a parameter and the obejct stream is fetched using AWS S3 client.
- * 
+ *
  * @param accessKeyId bucket specific unique identifier required for authentication
  * @param secretAccessKey user specific unique identifier required for authentication
  * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
  * @param bucketName uniquely identifies the bucket where the file should be uploaded
  * @param objectName object to be retrieved is passed on as a parameter
  * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
- * @returns getObjectResponse 
+ * @returns getObjectResponse
  */
 async function getObject(accessKeyId, secretAccessKey, region, bucketName, objectName, url) {
     try {
@@ -84,12 +85,12 @@ async function getObject(accessKeyId, secretAccessKey, region, bucketName, objec
             endpoint: new Endpoint('https://s3.'+ region + url
             )
         });
-        
+
         let params = {
             Bucket: bucketName,
             Key: objectName
         };
-        
+
        return await s3Client.getObject(params).promise();
     } catch (e) {
         throw new Error(`Could not retrieve file from bucket: ${e.message}`);
