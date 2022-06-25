@@ -46,8 +46,8 @@
   },
   "homepage": "https://github.com/aicore/wasabi-storage-lib/blob/main/README.md",
   "devDependencies": {
-    "@commitlint/cli": "16.2.4",
-    "@commitlint/config-conventional": "16.2.4",
+    "@commitlint/cli": "17.0.3",
+    "@commitlint/config-conventional": "17.0.3",
     "c8": "7.11.2",
     "chai": "4.3.6",
     "eslint": "8.14.0",
