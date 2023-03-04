@@ -46,16 +46,16 @@
   },
   "homepage": "https://github.com/aicore/wasabi-storage-lib/blob/main/README.md",
   "devDependencies": {
-    "@commitlint/cli": "17.4.2",
-    "@commitlint/config-conventional": "17.4.2",
-    "c8": "7.12.0",
+    "@commitlint/cli": "17.4.4",
+    "@commitlint/config-conventional": "17.4.4",
+    "c8": "7.13.0",
     "chai": "4.3.7",
-    "eslint": "8.33.0",
+    "eslint": "8.35.0",
     "husky": "8.0.3",
     "mocha": "10.2.0"
   },
   "dependencies": {
-    "aws-sdk": "2.1307.0",
+    "aws-sdk": "2.1328.0",
     "fs-extra": "11.1.0",
     "node-fetch": "3.3.0",
     "path": "0.12.7",
