@@ -99,6 +99,37 @@ async function getObject(accessKeyId, secretAccessKey, region, bucketName, objec
 }
 
 /**
+ * deletes the given  object.
+ *
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param objectName object to be retrieved is passed on as a parameter
+ * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
+ * @returns getObjectResponse
+ */
+async function deleteObject(accessKeyId, secretAccessKey, region, bucketName, objectName, url) {
+    try {
+        const s3Client = new S3({
+            accessKeyId: accessKeyId,
+            secretAccessKey: secretAccessKey,
+            endpoint: new Endpoint('https://s3.'+ region + url
+            )
+        });
+
+        let params = {
+            Bucket: bucketName,
+            Key: objectName
+        };
+
+        return await s3Client.deleteObject(params).promise();
+    } catch (e) {
+        throw new Error(`Could not retrieve file from bucket: ${e.message}`);
+    }
+}
+
+/**
  * Module to get the object data. The path of the file to be retrieved is
  * passed on as a parameter and the obejct stream is fetched using AWS S3 client.
  *
@@ -143,12 +174,12 @@ function downloadObject(accessKeyId, secretAccessKey, region, bucketName, object
  * @param secretAccessKey user specific unique identifier required for authentication
  * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
  * @param bucketName uniquely identifies the bucket where the file should be uploaded
- * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
  * @param prefix a string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
  * pass in prefix as `a/b/`
+ * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
  * @returns listObjectResponse
  */
-function listObjects(accessKeyId, secretAccessKey, region, bucketName, url, prefix) {
+function listObjects(accessKeyId, secretAccessKey, region, bucketName, prefix, url) {
     try {
         const s3Client = new S3({
             accessKeyId: accessKeyId,
@@ -162,15 +193,7 @@ function listObjects(accessKeyId, secretAccessKey, region, bucketName, url, pref
             Prefix: prefix
         };
 
-        return new Promise((resolve, reject)=>{
-            s3Client.listObjects(params, function (err, data) {
-                if(err) {
-                    reject(err);
-                    return;
-                }
-                resolve(data);
-            });
-        });
+        return s3Client.listObjects(params).promise();
     } catch (e) {
         throw new Error(`Could not listObjects bucket: ${e.message}`);
     }
@@ -181,5 +204,6 @@ export default {
     uploadFileToBucket,
     getObject,
     downloadObject,
-    listObjects
+    listObjects,
+    deleteObject
 };

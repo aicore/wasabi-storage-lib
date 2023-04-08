@@ -17,7 +17,7 @@
  */
 import s3Client from './aws_s3_client_module.js';
 
-const BASE_LINODE_URL_SUFFIX = '.wasabisys.com';
+const BASE_WASABI_URL_SUFFIX = '.wasabisys.com';
 
 /**
  * Wasabi Storage Helper Module to upload a file to object storage. The file is uploaded using
@@ -39,7 +39,7 @@ const BASE_LINODE_URL_SUFFIX = '.wasabisys.com';
     }
 
     const response = await s3Client.uploadFileToBucket(accessKeyId,
-        secretAccessKey, region, file, bucket, BASE_LINODE_URL_SUFFIX, objectNameOverride);
+        secretAccessKey, region, file, bucket, BASE_WASABI_URL_SUFFIX, objectNameOverride);
     console.log("Object Upload Response : " + JSON.stringify(response));
     return response;
 }
@@ -61,7 +61,7 @@ async function fetchObject(accessKeyId, secretAccessKey, region, bucketName, obj
         "and bucketName are required parameters");
     }
     const response = await s3Client.getObject(accessKeyId, secretAccessKey, region,
-        bucketName, objectName, BASE_LINODE_URL_SUFFIX);
+        bucketName, objectName, BASE_WASABI_URL_SUFFIX);
 
     if (!response || !response.Body || !response.Body.data) {
         throw new Error("Invalid Response: Body or Body.Data is missing");
@@ -89,7 +89,7 @@ async function downloadFileFromBucket(accessKeyId, secretAccessKey, region, buck
             "and bucketName are required parameters");
     }
     return  s3Client.downloadObject(accessKeyId, secretAccessKey, region,
-        bucketName, objectName, BASE_LINODE_URL_SUFFIX, localPath);
+        bucketName, objectName, BASE_WASABI_URL_SUFFIX, localPath);
 }
 
 /**
@@ -110,12 +110,32 @@ async function listObjects(accessKeyId, secretAccessKey, region, bucketName, pre
             "and bucketName, prefix are required parameters");
     }
     return  s3Client.listObjects(accessKeyId, secretAccessKey, region,
-        bucketName, BASE_LINODE_URL_SUFFIX, prefix);
+        bucketName, prefix, BASE_WASABI_URL_SUFFIX);
+}
+
+/**
+ * deletes a given object from bucket
+ *
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param objectName object to be retrieved is passed on as a parameter
+ * @returns deleteObjectResponse
+ */
+async function deleteObject(accessKeyId, secretAccessKey, region, bucketName, objectName) {
+    if (!region || !bucketName || !objectName) {
+        throw new Error("Invalid parameter value: accessToken, region, fileName " +
+            "and bucketName, prefix are required parameters");
+    }
+    return  s3Client.deleteObject(accessKeyId, secretAccessKey, region,
+        bucketName, objectName, BASE_WASABI_URL_SUFFIX);
 }
 
 export default {
     uploadFileToBucket,
     downloadFileFromBucket,
     fetchObject,
-    listObjects
+    listObjects,
+    deleteObject
 };
