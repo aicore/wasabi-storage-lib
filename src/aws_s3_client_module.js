@@ -20,6 +20,7 @@ import pkg from 'aws-sdk';
 import path from 'path';
 import fsExtra from "fs-extra";
 import stream from "stream";
+import * as fs from "fs";
 
 const {S3, Endpoint} = pkg;
 
@@ -97,7 +98,46 @@ async function getObject(accessKeyId, secretAccessKey, region, bucketName, objec
     }
 }
 
+/**
+ * Module to get the object data. The path of the file to be retrieved is
+ * passed on as a parameter and the obejct stream is fetched using AWS S3 client.
+ *
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param objectName object to be retrieved is passed on as a parameter
+ * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
+ * @returns getObjectResponse
+ */
+function downloadObject(accessKeyId, secretAccessKey, region, bucketName, objectName, url, destFilePath) {
+    try {
+        const s3Client = new S3({
+            accessKeyId: accessKeyId,
+            secretAccessKey: secretAccessKey,
+            endpoint: new Endpoint('https://s3.'+ region + url
+            )
+        });
+
+        let params = {
+            Bucket: bucketName,
+            Key: objectName
+        };
+
+        let s3ReadStream = s3Client.getObject(params).createReadStream();
+        let fileStream = fs.createWriteStream(destFilePath);
+        return new Promise((resolve, reject)=>{
+            s3ReadStream.on('finish', resolve);
+            s3ReadStream.on('error', reject);
+            s3ReadStream.pipe(fileStream);
+        });
+    } catch (e) {
+        throw new Error(`Could not download file from bucket: ${e.message}`);
+    }
+}
+
 export default {
     uploadFileToBucket,
-    getObject
+    getObject,
+    downloadObject
 };

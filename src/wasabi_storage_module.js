@@ -71,7 +71,29 @@ async function fetchObject(accessKeyId, secretAccessKey, region, bucketName, obj
     return response.Body.data;
 }
 
+/**
+ * Module to download the object to a given local file Path. The path of the file to be retrieved
+ * and the destination local file path is given as param. Note that the destination folder must exist.
+ *
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param objectName object to be retrieved is passed on as a parameter
+ * @param {string} localPath The full path of the form `path/to/local/file.txt` and the dir `path/to/local/` must exist.
+ * @returns getObjectResponse
+ */
+async function downloadFileFromBucket(accessKeyId, secretAccessKey, region, bucketName, objectName, localPath) {
+    if (!region || !bucketName || !objectName) {
+        throw new Error("Invalid parameter value: accessToken, region, fileName " +
+            "and bucketName are required parameters");
+    }
+    return  s3Client.downloadObject(accessKeyId, secretAccessKey, region,
+        bucketName, objectName, BASE_LINODE_URL_SUFFIX, localPath);
+}
+
 export default {
     uploadFileToBucket,
+    downloadFileFromBucket,
     fetchObject
 };
