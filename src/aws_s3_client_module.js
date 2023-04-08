@@ -136,8 +136,50 @@ function downloadObject(accessKeyId, secretAccessKey, region, bucketName, object
     }
 }
 
+/**
+ * lists all objects in a bucket based on prefix. Eg, to return all files in dir `a/b/`, pass in prefix as `a/b/`
+ * a maximum of 1000 objects is usually returned(limited by AWS).
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
+ * @param prefix a string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
+ * pass in prefix as `a/b/`
+ * @returns listObjectResponse
+ */
+function listObjects(accessKeyId, secretAccessKey, region, bucketName, url, prefix) {
+    try {
+        const s3Client = new S3({
+            accessKeyId: accessKeyId,
+            secretAccessKey: secretAccessKey,
+            endpoint: new Endpoint('https://s3.'+ region + url
+            )
+        });
+
+        let params = {
+            Bucket: bucketName,
+            Prefix: prefix
+        };
+
+        return new Promise((resolve, reject)=>{
+            s3Client.listObjects(params, function (err, data) {
+                if(err) {
+                    reject(err);
+                    return;
+                }
+                resolve(data);
+            });
+        });
+    } catch (e) {
+        throw new Error(`Could not listObjects bucket: ${e.message}`);
+    }
+}
+
+
 export default {
     uploadFileToBucket,
     getObject,
-    downloadObject
+    downloadObject,
+    listObjects
 };

@@ -92,8 +92,30 @@ async function downloadFileFromBucket(accessKeyId, secretAccessKey, region, buck
         bucketName, objectName, BASE_LINODE_URL_SUFFIX, localPath);
 }
 
+/**
+ * lists all objects in a bucket based on prefix. Eg, to return all files in dir `a/b/`, pass in prefix as `a/b/`
+ * a maximum of 1000 objects is usually returned(limited by AWS).
+ *
+ * @param accessKeyId bucket specific unique identifier required for authentication
+ * @param secretAccessKey user specific unique identifier required for authentication
+ * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
+ * @param bucketName uniquely identifies the bucket where the file should be uploaded
+ * @param prefix a string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
+ * pass in prefix as `a/b/`
+ * @returns listObjectResponse
+ */
+async function listObjects(accessKeyId, secretAccessKey, region, bucketName, prefix) {
+    if (!region || !bucketName || !prefix) {
+        throw new Error("Invalid parameter value: accessToken, region, fileName " +
+            "and bucketName, prefix are required parameters");
+    }
+    return  s3Client.listObjects(accessKeyId, secretAccessKey, region,
+        bucketName, BASE_LINODE_URL_SUFFIX, prefix);
+}
+
 export default {
     uploadFileToBucket,
     downloadFileFromBucket,
-    fetchObject
+    fetchObject,
+    listObjects
 };
