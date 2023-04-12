@@ -174,7 +174,7 @@ function downloadObject(accessKeyId, secretAccessKey, region, bucketName, object
  * @param secretAccessKey user specific unique identifier required for authentication
  * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
  * @param bucketName uniquely identifies the bucket where the file should be uploaded
- * @param prefix a string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
+ * @param prefix an optional string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
  * pass in prefix as `a/b/`
  * @param url suffix url to decide whether to upload the file to AWS S3 or LiNode Object Storage
  * @returns listObjectResponse

@@ -100,12 +100,12 @@ async function downloadFileFromBucket(accessKeyId, secretAccessKey, region, buck
  * @param secretAccessKey user specific unique identifier required for authentication
  * @param region indicates the geographical server location (e.g us-east-1, eu-west-1a)
  * @param bucketName uniquely identifies the bucket where the file should be uploaded
- * @param prefix a string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
+ * @param prefix an optional string to narrow down to specific objects. Eg, to return all files in dir `a/b/`,
  * pass in prefix as `a/b/`
  * @returns listObjectResponse
  */
-async function listObjects(accessKeyId, secretAccessKey, region, bucketName, prefix) {
-    if (!region || !bucketName || !prefix) {
+async function listObjects(accessKeyId, secretAccessKey, region, bucketName, prefix = undefined) {
+    if (!region || !bucketName) {
         throw new Error("Invalid parameter value: accessToken, region, fileName " +
             "and bucketName, prefix are required parameters");
     }
