@@ -55,7 +55,7 @@
     "mocha": "9.2.2"
   },
   "dependencies": {
-    "aws-sdk": "2.1353.0",
+    "aws-sdk": "2.1356.0",
     "fs-extra": "10.1.0",
     "node-fetch": "3.2.4",
     "path": "0.12.7",
