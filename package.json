@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "aws-sdk": "2.1633.0",
-    "fs-extra": "10.1.0",
+    "fs-extra": "11.2.0",
     "node-fetch": "3.3.2",
     "path": "0.12.7",
     "url-join": "5.0.0"
